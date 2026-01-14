@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 app.secret_key = 'Almazan'
 
-db_user = os.environ.get("root")
+db_user = os.environ.get("MYSQLUSER")
 db_password = os.environ.get("MYSQLPASSWORD")
 db_host = os.environ.get("MYSQLHOST")
 db_port = os.environ.get("MYSQLPORT", "3306")
