@@ -17,19 +17,16 @@ if database_url:
         database_url = database_url.replace('mysql://', 'mysql+pymysql://', 1)
 else:
     # Fallback for local dev: change user, password, db as needed
+        # Database configuration for Railway
     db_user = os.environ.get('MYSQLUSER', 'root')
     db_password = os.environ.get('MYSQLPASSWORD', '')
     db_host = os.environ.get('MYSQLHOST', 'localhost')
     db_port = os.environ.get('MYSQLPORT', '3306')
     db_name = os.environ.get('MYSQL_DATABASE', 'user_db')
-
-database_url = f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
-app.config['SQLALCHEMY_DATABASE_URI'] = database_url
-
-    database_url = f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
-
-app.config['SQLALCHEMY_DATABASE_URI'] = database_url
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
+    database_url = f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
