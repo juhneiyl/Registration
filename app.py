@@ -10,7 +10,7 @@ app.secret_key = 'Almazan'
 db_user = os.environ.get("MYSQLUSER")
 db_password = os.environ.get("MYSQLPASSWORD")
 db_host = os.environ.get("MYSQLHOST")
-db_port = os.environ.get("MYSQLPORT", "3306")  # Default to 3306 if not set
+db_port = os.environ.get("MYSQLPORT", "3306")
 db_name = os.environ.get("MYSQLDATABASE")
 
 app.config["SQLALCHEMY_DATABASE_URI"] = (
@@ -23,7 +23,7 @@ db = SQLAlchemy(app)
 # MODEL
 class User(db.Model):
     __tablename__ = 'users'
-
+    
     id = db.Column(db.Integer, primary_key=True)
     birthday = db.Column(db.Date, nullable=False)
     first_name = db.Column(db.String(100), nullable=False)
@@ -32,43 +32,44 @@ class User(db.Model):
     password = db.Column(db.String(200), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-
 # ROUTES
 @app.route('/')
 def home():
     return render_template('register.html')
 
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
         return redirect(url_for('home'))
-
+    
     birthday_str = request.form.get('birthday')
     first_name = request.form.get('first_name')
     last_name = request.form.get('last_name')
     email = request.form.get('email')
     password = request.form.get('password')
     confirm_password = request.form.get('confirm_password')
-
+    
     if password != confirm_password:
         flash('Passwords do not match!', 'error')
         return redirect(url_for('home'))
-
+    
     try:
         birthday = datetime.strptime(birthday_str, '%Y-%m-%d').date()
     except ValueError:
         flash('Invalid birthday format!', 'error')
         return redirect(url_for('home'))
-
-    existing_user = User.query.filter(User.email == email).first()
+    
+    existing_user = User.query.filter(
+        (User.email == email)
+    ).first()
+    
     if existing_user:
         flash('Email already exists!', 'error')
         return redirect(url_for('home'))
-
+    
     # Hash the password before saving
     hashed_password = generate_password_hash(password)
-
+    
     new_user = User(
         birthday=birthday,
         first_name=first_name,
@@ -76,7 +77,7 @@ def register():
         email=email,
         password=hashed_password  # Store hashed password
     )
-
+    
     try:
         db.session.add(new_user)
         db.session.commit()
@@ -86,17 +87,14 @@ def register():
         flash('Database error occurred!', 'error')
         return redirect(url_for('home'))
 
-
 @app.route('/success')
 def success():
     return render_template('success.html')
-
 
 @app.route('/users')
 def users():
     users = User.query.all()
     return render_template('users.html', users=users)
-
 
 # RUN
 if __name__ == '__main__':
