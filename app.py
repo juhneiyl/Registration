@@ -7,18 +7,30 @@ import os
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "janelle"
 
-# Database configuration
+# DATABASE CONFIGURATION
+# Try DATABASE_URL from environment first (for deployment), else fallback to local
 database_url = os.environ.get('DATABASE_URL')
-if database_url and database_url.startswith('mysql://'):
-    database_url = database_url.replace('mysql://', 'mysql+pymysql://', 1)
 
-# Fallback if no environment variable
-app.config['SQLALCHEMY_DATABASE_URI'] = database_url or 'mysql+pymysql://root:@localhost/user_db'
+if database_url:
+    if database_url.startswith('mysql://'):
+        # Ensure SQLAlchemy uses pymysql
+        database_url = database_url.replace('mysql://', 'mysql+pymysql://', 1)
+else:
+    # Fallback for local dev: change user, password, db as needed
+    DB_USER = os.environ.get('MYSQL_USER', 'root')
+    DB_PASSWORD = os.environ.get('MYSQL_PASSWORD', '')  # put your local root password here
+    DB_HOST = os.environ.get('MYSQL_HOST', 'localhost')
+    DB_PORT = os.environ.get('MYSQL_PORT', '3306')
+    DB_NAME = os.environ.get('MYSQL_DB', 'user_db')
+
+    database_url = f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Models
+# MODELS
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -29,10 +41,11 @@ class User(db.Model):
     password = db.Column(db.String(200), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+# Create tables
 with app.app_context():
     db.create_all()
 
-# Routes
+# ROUTES
 @app.route('/')
 def home():
     return render_template('register.html')
@@ -46,7 +59,6 @@ def register():
     password = request.form.get('password')
     confirm_password = request.form.get('confirm_password')
 
-    # Validation
     if password != confirm_password:
         flash('Passwords do not match!', 'error')
         return redirect(url_for('home'))
