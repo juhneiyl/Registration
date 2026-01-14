@@ -36,6 +36,10 @@ class User(db.Model):
     password = db.Column(db.String(200), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+# Create tables
+with app.app_context():
+    db.create_all()
+
 # ROUTES
 @app.route('/')
 def home():
@@ -86,8 +90,9 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('success'))
-    except:
+    except Exception as e:
         db.session.rollback()
+        print(f"Error: {e}")
         flash('Database error occurred!', 'error')
         return redirect(url_for('home'))
 
