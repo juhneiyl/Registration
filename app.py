@@ -17,11 +17,14 @@ if database_url:
         database_url = database_url.replace('mysql://', 'mysql+pymysql://', 1)
 else:
     # Fallback for local dev: change user, password, db as needed
-    DB_USER = os.environ.get('MYSQL_USER', 'root')
-    DB_PASSWORD = os.environ.get('MYSQL_PASSWORD', 'MYSQLPASSWORD')  # put your local root password here
-    DB_HOST = os.environ.get('MYSQL_HOST', 'localhost')
-    DB_PORT = os.environ.get('MYSQL_PORT', '3306')
-    DB_NAME = os.environ.get('MYSQL_DB', 'user_db')
+    db_user = os.environ.get('MYSQLUSER', 'root')
+    db_password = os.environ.get('MYSQLPASSWORD', '')
+    db_host = os.environ.get('MYSQLHOST', 'localhost')
+    db_port = os.environ.get('MYSQLPORT', '3306')
+    db_name = os.environ.get('MYSQL_DATABASE', 'user_db')
+
+database_url = f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 
     database_url = f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
 
