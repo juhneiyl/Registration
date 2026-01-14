@@ -18,17 +18,18 @@ if database_url:
 else:
     # Fallback for local dev: change user, password, db as needed
         # Database configuration for Railway
+    # Railway MySQL configuration
     db_user = os.environ.get('MYSQLUSER', 'root')
-    db_password = os.environ.get('MYSQLPASSWORD', '')
-    db_host = os.environ.get('MYSQLHOST', 'localhost')
+    db_password = os.environ.get('MYSQL_ROOT_PASSWORD', '')   # Railway variable
+    db_host = os.environ.get('RAILWAY_PRIVATE_DOMAIN', 'localhost')  # Railway host
     db_port = os.environ.get('MYSQLPORT', '3306')
     db_name = os.environ.get('MYSQL_DATABASE', 'user_db')
     
     database_url = f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
+    
+    db = SQLAlchemy(app)
 
 # MODELS
 class User(db.Model):
