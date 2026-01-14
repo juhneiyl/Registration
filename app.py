@@ -18,7 +18,7 @@ if database_url:
 else:
     # Fallback for local dev: change user, password, db as needed
     DB_USER = os.environ.get('MYSQL_USER', 'root')
-    DB_PASSWORD = os.environ.get('MYSQL_PASSWORD', '')  # put your local root password here
+    DB_PASSWORD = os.environ.get('MYSQL_PASSWORD', 'MYSQLPASSWORD')  # put your local root password here
     DB_HOST = os.environ.get('MYSQL_HOST', 'localhost')
     DB_PORT = os.environ.get('MYSQL_PORT', '3306')
     DB_NAME = os.environ.get('MYSQL_DB', 'user_db')
