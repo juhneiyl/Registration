@@ -4,32 +4,26 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash
 import os
 
+# =========================
+# APP SETUP
+# =========================
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = "janelle"
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "janelle")
 
 # =========================
-# DATABASE CONFIGURATION
+# DATABASE (RAILWAY SAFE)
 # =========================
 
 database_url = os.environ.get("DATABASE_URL")
 
-if database_url:
-    # Railway sometimes provides mysql:// which SQLAlchemy doesn't like
-    if database_url.startswith("mysql://"):
-        database_url = database_url.replace(
-            "mysql://", "mysql+pymysql://", 1
-        )
-else:
-    # Local development fallback
-    db_user = os.environ.get("MYSQLUSER", "root")
-    db_password = os.environ.get("MYSQL_ROOT_PASSWORD", "")
-    db_host = os.environ.get("MYSQLHOST", "localhost")
-    db_port = os.environ.get("MYSQLPORT", "3306")
-    db_name = os.environ.get("MYSQL_DATABASE", "user_db")
+if not database_url:
+    raise RuntimeError("DATABASE_URL is not set")
 
-    database_url = (
-        f"mysql+pymysql://{db_user}:{db_password}"
-        f"@{db_host}:{db_port}/{db_name}"
+# Fix MySQL scheme for SQLAlchemy
+if database_url.startswith("mysql://"):
+    database_url = database_url.replace(
+        "mysql://", "mysql+pymysql://", 1
     )
 
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
@@ -52,7 +46,10 @@ class User(db.Model):
     password = db.Column(db.String(200), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-# Create tables
+# =========================
+# DB INIT
+# =========================
+
 with app.app_context():
     db.create_all()
 
@@ -89,7 +86,7 @@ def register():
 
     hashed_password = generate_password_hash(password)
 
-    new_user = User(
+    user = User(
         first_name=first_name,
         last_name=last_name,
         email=email,
@@ -98,13 +95,13 @@ def register():
     )
 
     try:
-        db.session.add(new_user)
+        db.session.add(user)
         db.session.commit()
         flash("Registration successful!", "success")
         return redirect(url_for("success"))
     except Exception as e:
         db.session.rollback()
-        print("DB Error:", e)
+        print("DB ERROR:", e)
         flash("Database error occurred.", "error")
         return redirect(url_for("home"))
 
@@ -114,8 +111,8 @@ def success():
 
 @app.route("/users")
 def users():
-    all_users = User.query.order_by(User.created_at.desc()).all()
-    return render_template("users.html", users=all_users)
+    users = User.query.order_by(User.created_at.desc()).all()
+    return render_template("users.html", users=users)
 
 @app.route("/test-db")
 def test_db():
@@ -125,6 +122,10 @@ def test_db():
     except Exception as e:
         return f"DB connection error: {e}"
 
+# =========================
+# ENTRY POINT (RAILWAY)
+# =========================
+
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port)
