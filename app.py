@@ -7,11 +7,11 @@ import os
 app = Flask(__name__)
 app.secret_key = 'Almazan'
 
-db_user = os.environ.get("MYSQLUSER")
+db_user = os.environ.get("root")
 db_password = os.environ.get("MYSQLPASSWORD")
 db_host = os.environ.get("MYSQLHOST")
 db_port = os.environ.get("MYSQLPORT", "3306")
-db_name = os.environ.get("MYSQLDATABASE")
+db_name = os.environ.get("MYSQL_DATABASE")
 
 # Remove placeholder text from port
 if db_port and '<from' in db_port.lower():
