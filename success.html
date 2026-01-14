@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Success</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+
+        .sbx {
+            padding: 30px;
+        }
+        .header1 {
+            margin-bottom: 20px;
+        }
+        .header2 {
+            margin-bottom: 30px;
+        }
+        a {
+            display: block;
+            margin: 15px 0;
+            padding: 10px;
+            text-align: center;
+        }
+        .content {
+            display: none;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            setTimeout(function() {
+                document.querySelector('.content').style.display = 'block';
+            }, 1000);
+        };
+    </script>
+</head>
+<body>
+
+<div class="lbx">
+    <div class="sbx content">
+        <p class="header1">Your account has been created.</p>
+        <a href="/">Go back to registration</a>
+        <a href="/users">View all users</a>
+    </div>
+</div>
+
+</body>
+</html>
