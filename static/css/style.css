@@ -1,0 +1,124 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  color: white;
+  background-image: url("../resources/BG.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header1 {
+  text-align: center;
+}
+
+.lbx {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 17.172px;
+}
+
+.sbx {
+  padding: 34.344px;
+  border-radius: 12.849px;
+  width: 100%;
+  max-width: 643.125px;
+  background-color: rgba(0, 0, 0, 0.9);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(2px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.header2 {
+  text-align: center;
+  margin-bottom: 25.758px;
+  font-size: 15px;
+  color: white;
+}
+
+.fg {
+  margin-bottom: 17.172px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6.8688px;
+  color: white;
+  font-weight: 500;
+  font-size: 15px;
+  text-shadow: none;
+}
+
+input {
+  width: 100%;
+  padding: 10.3032px 12.849px;
+  border-radius: 6.8688px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: black;
+}
+
+input:focus {
+  border-color: #FFFFFF;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  outline: none;
+}
+
+.submit {
+  width: 100%;
+  padding: 12.0204px;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 8.586px;
+  background: linear-gradient(135deg, #FFFFFF, #000000);
+  color: black;
+  border: none;
+  border-radius: 6.8688px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.submit:hover {
+  background: linear-gradient(135deg, #000000, #FFFFFF);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+  transform: scale(1.03);
+}
+
+a {
+  color: #FFFFFF;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: black;
+  color: white;
+}
