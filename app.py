@@ -10,7 +10,7 @@ app.secret_key = 'Almazan'
 db_user = os.environ.get("MYSQLUSER")
 db_password = os.environ.get("MYSQLPASSWORD")
 db_host = os.environ.get("MYSQLHOST")
-db_port = os.environ.get("MYSQLPORT")
+db_port = os.environ.get("MYSQLPORT", "3306")
 db_name = os.environ.get("MYSQLDATABASE")
 
 app.config["SQLALCHEMY_DATABASE_URI"] = (
